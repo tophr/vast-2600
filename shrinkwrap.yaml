@@ -1,0 +1,12 @@
+dependencies:
+  kaboom: 2000.2.10
+packages:
+  /kaboom/2000.2.10:
+    dev: false
+    resolution:
+      integrity: sha512-OHWdRuRMNkTkpO0/1R4ljS4+vpPtf6PvN+S0WTe+PkPB6Z61rmunw4SKTQDkrCt7dDzEIZTnK1G6s7rttd61Bw==
+registry: 'https://registry.npmjs.org/'
+shrinkwrapMinorVersion: 9
+shrinkwrapVersion: 3
+specifiers:
+  kaboom: ^2000.2.10
