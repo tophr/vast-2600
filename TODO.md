@@ -1,9 +1,11 @@
 # TODO
 
-- Loading screen
+- ~~Loading screen~~
 - Character select
-- CRT effect (requires v3)
-- Different game type for each?
+- ~~CRT effect (requires v3)~~
+- ~~Different game type for each~~
+- Keyboard guide + game goal (on character select probably)
+- Unify life / score? Or leave asymmetric cuz you know
 
 ## Goals:
 
