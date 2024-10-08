@@ -1,3 +1,3 @@
-# VAST 2600 - Kaboom!
+# VAST 2600 - Kaplay!
 
-[Kaboom](https://kaboomjs.com)  is a JavaScript game programming library that helps you make games fast and fun.
+[Kaplay](https://kaplayjs.com)  is a JavaScript game programming library that helps you make games fast and fun.

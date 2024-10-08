@@ -181,7 +181,7 @@ export default function sceneCave() {
           {
             hspeed: 100,
             vspeed: 50,
-            vel: Vec2.fromAngle(rand(-20, 20)),
+            // vel: Vec2.fromAngle(rand(-20, 20)),
           },
         ],
       },

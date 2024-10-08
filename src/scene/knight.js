@@ -5,6 +5,26 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     // define gravity
     // gravity(1200);
     setGravity(1200);
+    
+    // Text bubble
+    const textbox = add([
+      rect(width() - 200, 60, { radius: 32 }),
+      anchor("center"),
+      pos(center().x, height() - 100),
+      outline(4),
+    ]);
+
+    // Text
+    const txt = add([
+      text("Press spacebar to avoid obstacles and escape the cave!", { 
+        font: "unscii",
+        size: 8,
+        width: width() - 230, 
+        align: "center" }),
+      pos(textbox.pos),
+      anchor("center"),
+      color(0, 0, 0),
+    ]);
 
     // add a game object to screen
     const player = add([

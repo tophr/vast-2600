@@ -40,7 +40,7 @@ asteroid - fire shooting!
 - 5 health
 
 ### Cave
-reverse breakout?   asteroid?  
+**reverse breakout**   asteroid?  
 space invaders against all the other players / reverse dig dug? some way to move around screen to build out then collapse
 
 - omens? cave, bat, stone, mushroom, river, diamond

@@ -1,6 +1,5 @@
-// import kaboom lib
-// import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
-import kaboom from "https://unpkg.com/kaboom@next/dist/kaboom.mjs";
+// import kaplay lib
+import kaboom from "https://unpkg.com/kaplay@3000.1.17/dist/kaboom.mjs";
 import sceneStart from "./scene/start.js";
 import sceneKnight from "./scene/knight.js";
 import sceneGoblin from "./scene/goblin.js";
@@ -36,10 +35,15 @@ loadShaderURL("crt", null, "crt.frag");
 // });
 
 // load custom bitmap font, specifying the width and height of each character in the image
-loadBitmapFont("unscii", "unscii_8x8.png", 8, 8);
+loadBitmapFont(
+  "unscii",
+  "https://cdn.glitch.global/bcb76e3d-7950-4d40-a1ce-81f364667239/unscii_8x8.png",
+  8,
+  8
+);
 
 // load assets
-loadSprite("title", "title.png");
+loadSprite("title", "title.png?v=2");
 loadSprite("knight", "knight.png");
 loadSprite("thief", "thief.png");
 loadSprite("goblin", "goblin.png");
@@ -54,13 +58,13 @@ loadSprite("crystal", "crystal.png");
 // loadSprite("bomb", "bomb.png");
 // loadSprite("monster", "monster.png");
 
-loadSprite("bag", "bag.png")
-loadSprite("ghosty", "ghosty.png")
-loadSprite("grass", "grass.png")
-loadSprite("steel", "steel.png")
-loadSprite("door", "door.png?v=2")
-loadSprite("dooroutline", "door-outline.png?v=2")
-loadSprite("key", "key.png?v=2")
+loadSprite("bag", "bag.png");
+loadSprite("ghosty", "ghosty.png");
+loadSprite("grass", "grass.png");
+loadSprite("steel", "steel.png");
+loadSprite("door", "door.png?v=2");
+loadSprite("dooroutline", "door-outline.png?v=2");
+loadSprite("key", "key.png?v=2");
 
 // load scenes
 sceneStart();
@@ -72,4 +76,4 @@ sceneThief();
 sceneLose();
 sceneWin();
 
-go("start");
+go("start", true);

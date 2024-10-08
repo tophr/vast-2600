@@ -1,5 +1,6 @@
 export default function sceneStart() {
-  scene("start", () => {
+  scene("start", (initial) => {
+    // let initial = true;
     setGravity(0);
 
     const title = add([
@@ -10,14 +11,7 @@ export default function sceneStart() {
       scale(0.85),
     ]);
 
-    wait(0.5, () => {
-      // title.opacity = wave(0, 1, time(3));
-      // tween(title.pos, mousePos(), 1, (p) => title.pos = p, easings.easeOutBounce)
-      // ween(title.opacity, 1, 0, (p) => title.pos = p, easings.easeOutBounce)
-      tween(title.opacity, 3, 1, (p) => (title.opacity = p), easings.easeOut);
-    });
-
-    const knight = add([sprite("knight"), pos(20, 10), area()]);
+    const knight = add([sprite("knight"), pos(20, 10), area(), opacity(0), "char"]);
 
     const goblinPositions = [
       { x: 12, y: height() - 30 },
@@ -26,28 +20,42 @@ export default function sceneStart() {
     ];
 
     const goblins = goblinPositions.map((position) =>
-      add([sprite("goblin"), pos(position.x, position.y), anchor("botleft"), area(), "goblin"])
+      add([
+        sprite("goblin"),
+        pos(position.x, position.y),
+        anchor("botleft"),
+        area(),
+      opacity(0),
+        "goblin",
+        "char"
+      ])
     );
 
     const thief = add([
       sprite("thief"),
       pos(width() - 55, 45),
       anchor("botright"),
-      area()
+      area(),
+      opacity(0),
+      "char"
     ]);
 
     const dragon = add([
       sprite("dragon"),
-      pos(width() - 20, height() - 70),
+      pos(width() - 20, height()/2 + 10),
       anchor("botright"),
-      area()
+      area(),
+      opacity(0),
+      "char"
     ]);
 
     const cave = add([
       sprite("cave"),
       pos(width() - 12, height() - 20),
       anchor("botright"),
-      area()
+      area(),
+      opacity(0),
+      "char"
     ]);
 
     add([
@@ -56,6 +64,8 @@ export default function sceneStart() {
       pos(0, height()),
       anchor("botleft"),
       color(148, 16, 0),
+      opacity(0),
+      "copyright"
     ]);
 
     const copyright = add([
@@ -66,56 +76,68 @@ export default function sceneStart() {
       color(214, 82, 66),
       pos(width() / 2, height() - 1),
       anchor("bot"),
+      opacity(0),
+      "copyright"
     ]);
 
-    // wait(3, () => {
-    // 	title.opacity(1);
-    // });
-
-    
     // game start logic
     function characterSelect(charStr, char) {
-      // char.onHover(() => {
-      //   char.opacity = 0.75
-      //   // char.scale = 1.25
-      // });
-      // char.onHoverEnd(() => {
-      //   char.opacity = 1
-      //   // char.scale = 1
-      // })
       char.onHoverUpdate(() => {
-        const t = time() * 10
+        const t = time() * 10;
         char.color = rgb(
           wave(0, 255, t),
           wave(0, 255, t + 2),
-          wave(0, 255, t + 4),
-        )
-      })
-      // if (char == cave) {
-      //   cave.onClick(() => go("caveScene", {
-      //     levelIndex: 0,
-      //     score: 0,
-      //     lives: 3,
-      //   }));
-      // } else {
-        char.onClick(() => go(charStr + "Scene", {
+          wave(0, 255, t + 4)
+        );
+      });
+      char.onHoverEnd(() => {
+        char.color = rgb(255, 255, 255);
+      });
+      char.onClick(() =>
+        go(charStr + "Scene", {
           levelIndex: 0,
           score: 0,
           lives: 3,
-        }));
-      // }
+        })
+      );
     }
     
-    const chars = {"knight": knight, "dragon": dragon, "cave": cave, "thief": thief};
+    // loading animation
+    const chars = get("char");
+    const copyrightBar = get("copyright");
     
-    Object.keys(chars).forEach((key) => {
-      characterSelect(key, chars[key]);
+    let timings;
+    let duration = 2;
+    
+    if (initial === true) {
+      timings = [0.5, 2.5, 4.5];
+    } else {
+      timings = [0, 0, 0];
+      duration = 0.25;
+    }
+    
+    console.log({initial});
+    
+    wait(timings[0], () => {
+      tween(title.opacity, 1, duration, (p) => (title.opacity = p), easings.easeOut);
     });
     
+    wait(timings[1], () => {
+      chars.map((char) => tween(char.opacity, 1, duration, (p) => (char.opacity = p), easings.easeOut));
+    });
+    
+    wait(timings[2], () => {
+      copyrightBar.map((bar) => tween(bar.opacity, 1, duration, (p) => (bar.opacity = p), easings.easeOut));
+    });
+    
+    // game start interactivity
+    const charObj = { knight: knight, dragon: dragon, cave: cave, thief: thief };
+
+    Object.keys(charObj).forEach((key) => {
+      characterSelect(key, charObj[key]);
+    });
+
     let goblinx = get("goblin");
     goblinx.map((goblin) => characterSelect("goblin", goblin));
-    
-    // goblins[0].onClick(() => go("goblinScene", 0));
-    
   });
 }

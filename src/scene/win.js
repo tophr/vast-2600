@@ -21,7 +21,7 @@ export default function sceneWin(){
 
     // go back to game with space is pressed
     onKeyPress("enter", () => go("start"));
-    onClick(() => go("start"));
+    onClick(() => go("start", false));
   });
     
 };
