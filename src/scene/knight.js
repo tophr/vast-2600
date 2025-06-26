@@ -8,22 +8,24 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     
     // Text bubble
     const textbox = add([
-      rect(width() - 200, 60, { radius: 32 }),
+      rect(width() - 200, 60, { radius: 10 }),
       anchor("center"),
       pos(center().x, height() - 100),
-      outline(4),
+      outline(2),
+      color(0, 0, 0)
     ]);
 
     // Text
-    const txt = add([
+    const txtK = add([
+      pos(textbox.pos),
       text("Press spacebar to avoid obstacles and escape the cave!", { 
         font: "unscii",
         size: 8,
         width: width() - 230, 
-        align: "center" }),
-      pos(textbox.pos),
+        align: "center",  
+      }),
       anchor("center"),
-      color(0, 0, 0),
+      // color(0, 0, 0),
     ]);
 
     // add a game object to screen
@@ -52,7 +54,7 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
       }
     }
 
-    // jump when user press space
+    // jump when user presses space
     onTouchStart(jump);
     onKeyPress("space", jump);
     onClick(jump);

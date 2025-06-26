@@ -1,5 +1,6 @@
 // import kaplay lib
-import kaboom from "https://unpkg.com/kaplay@3000.1.17/dist/kaboom.mjs";
+// import kaboom from "https://unpkg.com/kaplay@3000/dist/kaboom.mjs";
+import kaplay from "https://unpkg.com/kaplay@3001/dist/kaplay.mjs"
 import sceneStart from "./scene/start.js";
 import sceneKnight from "./scene/knight.js";
 import sceneGoblin from "./scene/goblin.js";
@@ -17,12 +18,12 @@ const grey = [20, 20, 20];
 const purple = [148, 41, 239];
 
 // initialize context
-kaboom({
+kaplay({
   background: grey,
   width: 320, //768, //320,
   height: 192, //360, //192,
   scale: 3,
-  // stretch: true,
+  stretch: true,
   // letterbox: true,
 });
 
@@ -30,17 +31,12 @@ loadRoot("https://cdn.glitch.global/bcb76e3d-7950-4d40-a1ce-81f364667239/");
 
 loadShaderURL("crt", null, "crt.frag");
 
-// usePostEffect("crt", {
-//   u_flatness: 3,
-// });
+usePostEffect("crt", {
+  u_flatness: 4,
+});
 
 // load custom bitmap font, specifying the width and height of each character in the image
-loadBitmapFont(
-  "unscii",
-  "https://cdn.glitch.global/bcb76e3d-7950-4d40-a1ce-81f364667239/unscii_8x8.png",
-  8,
-  8
-);
+loadBitmapFont("unscii", "unscii_8x8.png", 8, 8);
 
 // load assets
 loadSprite("title", "title.png?v=2");
