@@ -1,0 +1,16 @@
+{
+  "name": "vast-2600",
+  "version": "1.0.0",
+  "description": "VAST 2600 - A game built with Kaplay",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . --cors"
+  },
+  "keywords": ["game", "kaplay", "javascript"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
