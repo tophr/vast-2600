@@ -1,11 +1,11 @@
 export default function sceneKnight(floorHeight, jumpForce, speed) {
   const purple = [148, 41, 239];
-  
+
   scene("knightScene", () => {
     // define gravity
     // gravity(1200);
     setGravity(1200);
-    
+
     // Text bubble
     const textbox = add([
       rect(width() - 200, 60, { radius: 10 }),
@@ -18,11 +18,11 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     // Text
     const txtK = add([
       pos(textbox.pos),
-      text("Press spacebar to avoid obstacles and escape the cave!", { 
+      text("Press spacebar to avoid obstacles and escape the cave!", {
         font: "unscii",
         size: 8,
-        width: width() - 230, 
-        align: "center",  
+        width: width() - 230,
+        align: "center",
       }),
       anchor("center"),
       // color(0, 0, 0),
@@ -59,8 +59,8 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     onKeyPress("space", jump);
     onClick(jump);
 
-    function spawnTree() {
-      // add tree obj
+    function spawnObstacle() {
+      // add obstacle obj
       add([
         rect(12, rand(8, 24)),
         area(),
@@ -69,27 +69,27 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
         anchor("botleft"),
         color(255, 180, 255),
         move(LEFT, speed),
-        "tree",
+        "obstacle",
       ]);
 
-      // wait a random amount of time to spawn next tree
-      wait(rand(0.25, 1.25), spawnTree);
+      // wait a random amount of time to spawn next obstacle
+      wait(rand(0.25, 1.25), spawnObstacle);
     }
 
-    // start spawning trees
-    spawnTree();
+    // start spawning obstacles
+    spawnObstacle();
 
-    // lose if player collides with any game obj with tag "tree"
-    player.onCollide("tree", () => {
+    // lose if player collides with any game obj with tag "obstacle"
+    player.onCollide("obstacle", () => {
       // go to "lose" scene and pass the score
       go("lose", score, "knight");
       burp();
-      addKaboom(player.pos);
+      addKaboom();
     });
 
     // keep track of score
     let score = 0;
-    
+
     const scoreLabel = add([
       text(score, {
         font: "unscii",

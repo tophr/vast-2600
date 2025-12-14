@@ -22,18 +22,18 @@ kaplay({
   width: 320, //768, //320,
   height: 192, //360, //192,
   scale: 3,
-  stretch: true,
+  // stretch: true,
   // letterbox: true,
 });
 
 // Using local assets from the assets folder
 const ASSET_BASE_URL = "./assets/";
 
-loadShaderURL("crt", null, `${ASSET_BASE_URL}crt.frag`);
+// loadShaderURL("crt", null, `${ASSET_BASE_URL}crt.frag`);
 
-usePostEffect("crt", {
-  u_flatness: 4,
-});
+// usePostEffect("crt", {
+//   u_flatness: 4,
+// });
 
 // load custom bitmap font, specifying the width and height of each character in the image
 loadBitmapFont("unscii", `${ASSET_BASE_URL}unscii_8x8.png`, 8, 8);
