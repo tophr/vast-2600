@@ -1,6 +1,5 @@
 // import kaplay lib
-// import kaboom from "https://unpkg.com/kaplay@3000/dist/kaboom.mjs";
-import kaplay from "https://unpkg.com/kaplay@3001/dist/kaplay.mjs"
+import kaplay from "kaplay";
 import sceneStart from "./scene/start.js";
 import sceneKnight from "./scene/knight.js";
 import sceneGoblin from "./scene/goblin.js";
@@ -39,8 +38,8 @@ usePostEffect("crt", {
 // load custom bitmap font, specifying the width and height of each character in the image
 loadBitmapFont("unscii", `${ASSET_BASE_URL}unscii_8x8.png`, 8, 8);
 
-// load assets
-loadSprite("title", `${ASSET_BASE_URL}title.png?v=2`);
+// load sprites
+loadSprite("title", `${ASSET_BASE_URL}title.png`);
 loadSprite("knight", `${ASSET_BASE_URL}knight.png`);
 loadSprite("thief", `${ASSET_BASE_URL}thief.png`);
 loadSprite("goblin", `${ASSET_BASE_URL}goblin.png`);
@@ -56,12 +55,19 @@ loadSprite("bomb", `${ASSET_BASE_URL}bomb.png`);
 loadSprite("monster", `${ASSET_BASE_URL}monster.png`);
 
 loadSprite("bag", `${ASSET_BASE_URL}bag.png`);
+loadSprite("bean", `${ASSET_BASE_URL}bean.png`);
 loadSprite("ghosty", `${ASSET_BASE_URL}ghosty.png`);
 loadSprite("grass", `${ASSET_BASE_URL}grass.png`);
 loadSprite("steel", `${ASSET_BASE_URL}steel.png`);
-loadSprite("door", `${ASSET_BASE_URL}door.png?v=2`);
-loadSprite("dooroutline", `${ASSET_BASE_URL}door-outline.png?v=2`);
-loadSprite("key", `${ASSET_BASE_URL}key.png?v=2`);
+loadSprite("door", `${ASSET_BASE_URL}door.png`);
+loadSprite("dooroutline", `${ASSET_BASE_URL}door-outline.png`);
+loadSprite("key", `${ASSET_BASE_URL}key.png`);
+
+// load audio
+loadSound("music", `${ASSET_BASE_URL}Arcade-Oddities.mp3`);
+loadSound("explosion", `${ASSET_BASE_URL}Explosion5.ogg`);
+loadSound("powerup", `${ASSET_BASE_URL}Powerup2.ogg`);
+loadSound("powerup2", `${ASSET_BASE_URL}Powerup20.ogg`);
 
 // load scenes
 sceneStart();

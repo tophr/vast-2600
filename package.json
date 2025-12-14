@@ -10,6 +10,9 @@
   "keywords": ["game", "kaplay", "javascript"],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "kaplay": "^3001.0.0"
+  },
   "devDependencies": {
     "serve": "^14.2.1"
   }
