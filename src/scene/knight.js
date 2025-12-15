@@ -25,8 +25,23 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
         align: "center",
       }),
       anchor("center"),
-      // color(0, 0, 0),
     ]);
+
+    const startText = add([
+      pos(center().x, textbox.pos.y + 60),
+      text("Press SPACEBAR or ENTER to start", {
+        font: "unscii",
+        size: 8,
+        // width: width() - 180,
+        align: "center",
+      }),
+      anchor("center"),
+    ]);
+
+    // Make start text blink slowly
+    startText.onUpdate(() => {
+      startText.opacity = wave(0.3, 1, time() * 2);
+    });
 
     // add a game object to screen
     const player = add([
