@@ -4,8 +4,10 @@
   "description": "VAST 2600 - A game built with Kaplay",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "dev": "npx serve . --cors"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite"
   },
   "keywords": ["game", "kaplay", "javascript"],
   "author": "",
@@ -14,6 +16,7 @@
     "kaplay": "^3001.0.0"
   },
   "devDependencies": {
-    "serve": "^14.2.1"
+    "serve": "^14.2.1",
+    "vite": "^5.0.0"
   }
 }
