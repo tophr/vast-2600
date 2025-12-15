@@ -206,21 +206,51 @@ export default function sceneCave() {
     // ball
     let speed = 120;
 
-    // optimized mouse controls - cache mouse position and paddle bounds
+    // Paddle movement - keyboard takes priority, mouse as fallback
     let lastMouseX = mousePos().x;
-    onUpdate(() => {
-      const currentMouseX = mousePos().x;
-      if (currentMouseX > 0 && currentMouseX < width()) {
-        const paddleLeft = paddle.pos.x - 64; // half paddle width
-        const paddleRight = paddle.pos.x + 64;
+    let usingKeyboard = false;
 
-        if (currentMouseX < paddleLeft) {
-          paddle.move(-paddle.speed, 0);
-        } else if (currentMouseX > paddleRight) {
-          paddle.move(paddle.speed, 0);
+    onUpdate(() => {
+      let keyPressed = false;
+
+      // Check for keyboard input first
+      if (isKeyDown("left") || isKeyDown("a")) {
+        paddle.move(-paddle.speed, 0);
+        keyPressed = true;
+        usingKeyboard = true;
+      }
+      if (isKeyDown("right") || isKeyDown("d")) {
+        paddle.move(paddle.speed, 0);
+        keyPressed = true;
+        usingKeyboard = true;
+      }
+
+      // If no keys pressed, use mouse position (with delay to prevent snapping)
+      if (!keyPressed) {
+        // Small delay before switching to mouse to prevent snapping
+        if (usingKeyboard) {
+          usingKeyboard = false;
+          lastMouseX = mousePos().x; // Reset mouse tracking to current position
+        } else {
+          const currentMouseX = mousePos().x;
+          const mouseMoved = Math.abs(currentMouseX - lastMouseX) > 5;
+
+          if (mouseMoved && currentMouseX > 0 && currentMouseX < width()) {
+            const paddleLeft = paddle.pos.x - 16;
+            const paddleRight = paddle.pos.x + 16;
+
+            if (currentMouseX < paddleLeft) {
+              paddle.move(-paddle.speed, 0);
+            } else if (currentMouseX > paddleRight) {
+              paddle.move(paddle.speed, 0);
+            }
+          }
+          lastMouseX = currentMouseX;
         }
       }
-      lastMouseX = currentMouseX;
+
+      // Keep paddle within screen bounds
+      paddle.pos.x = Math.max(16, Math.min(width() - 16, paddle.pos.x));
     });
 
     // optimized ball movement - use simple position checks instead of worldArea()
