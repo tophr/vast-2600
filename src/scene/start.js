@@ -101,35 +101,47 @@ export default function sceneStart() {
         })
       );
     }
-    
+
     // loading animation
     const chars = get("char");
     const copyrightBar = get("copyright");
-    
+
     let timings;
     let duration = 2;
-    
+    let skipped = false;
+
     if (initial === true) {
       timings = [0.5, 2.5, 4.5];
     } else {
       timings = [0, 0, 0];
       duration = 0.25;
     }
-    
+
+    // Skip animation on escape key
+    onKeyPress("escape", () => {
+      if (!skipped) {
+        skipped = true;
+        // Immediately show all elements
+        title.opacity = 1;
+        chars.forEach(char => char.opacity = 1);
+        copyrightBar.forEach(bar => bar.opacity = 1);
+      }
+    });
+
     console.log({initial});
-    
+
     wait(timings[0], () => {
       tween(title.opacity, 1, duration, (p) => (title.opacity = p), easings.easeOut);
     });
-    
+
     wait(timings[1], () => {
       chars.map((char) => tween(char.opacity, 1, duration, (p) => (char.opacity = p), easings.easeOut));
     });
-    
+
     wait(timings[2], () => {
       copyrightBar.map((bar) => tween(bar.opacity, 1, duration, (p) => (bar.opacity = p), easings.easeOut));
     });
-    
+
     // game start interactivity
     const charObj = { knight: knight, dragon: dragon, cave: cave, thief: thief };
 
