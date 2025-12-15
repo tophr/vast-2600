@@ -16,7 +16,7 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     ]);
 
     // Text
-    const txtK = add([
+    const instructionText = add([
       pos(textbox.pos),
       text("Press spacebar to avoid obstacles and escape the cave!", {
         font: "unscii",
