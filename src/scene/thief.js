@@ -199,7 +199,7 @@ export default function sceneThief() {
 
       // Calculate speed multiplier based on time elapsed (gradually increases)
       const elapsedTime = time() - gameStartTime;
-      const speedMultiplier = 1 + (elapsedTime * 0.1); // 10% increase per second
+      const speedMultiplier = 1 + (elapsedTime * 0.05); // 5% increase every second
       const currentSpeedMin = SPEED_MIN * speedMultiplier;
       const currentSpeedMax = SPEED_MAX * speedMultiplier;
 

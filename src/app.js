@@ -65,8 +65,8 @@ loadSprite("key", `${ASSET_BASE_URL}key.png`);
 
 // load audio
 loadSound("music", `${ASSET_BASE_URL}Arcade-Oddities.mp3`);
-loadSound("explosion", `${ASSET_BASE_URL}Explosion5.ogg`);
-loadSound("powerup", `${ASSET_BASE_URL}Powerup2.ogg`);
+loadSound("explosion", `${ASSET_BASE_URL}Explosion5.ogg`); // blockbreak
+loadSound("powerup", `${ASSET_BASE_URL}Powerup2.ogg`); // paddle hit
 loadSound("powerup2", `${ASSET_BASE_URL}Powerup20.ogg`);
 
 // load scenes

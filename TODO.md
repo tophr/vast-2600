@@ -9,10 +9,10 @@
 
 ## Goals:
 
-**Knight**: Kill Dragon -or- reveal 5 crystal tokens + escape cave via entrance tile  
-**Goblins**: Kill Knight -or- kill Dragon -or- smash 5 crystal tokens  
-**Dragon**: Wake up (remove 11 sloth cubes) & then surface and esacpe via entrance tile  
-**Cave**: Collapse the cave (place all tiles then destroy until 5 crystals collapse)  
+**Knight**: Kill Dragon -or- reveal 5 crystal tokens + escape cave via entrance tile
+**Goblins**: Kill Knight -or- kill Dragon -or- smash 5 crystal tokens
+**Dragon**: Wake up (remove 11 sloth cubes) & then surface and esacpe via entrance tile
+**Cave**: Collapse the Cave. To do so, you must first place all of the Cave tiles, then destroy Cave tiles until 5 Crystal tiles have collapsed.
 **Thief**: Aquire + stash 6 treasures or dragon gem tokens (to break curse)
 
 ## Game Ideation:
@@ -25,22 +25,22 @@
 
 ### Goblins
 
-snake - more goblins / shooter against dragon + knight, puzzle game positioning the 3? asteroids to smash crystals  
-platformer? **rpg** - find and kill dragon or knight and smash 5 crystal tokens 
+snake - more goblins / shooter against dragon + knight, puzzle game positioning the 3? asteroids to smash crystals
+platformer? **rpg** - find and kill dragon or knight and smash 5 crystal tokens
 
 - fangs, bones, eye tribes
 - rage meter 0-3
 
 ### Dragon
 
-asteroid - fire shooting!  
+asteroid - fire shooting!
 **flappy bird** - get powerups that let you shoot through obstacles (cave walls)
 
 - claw, flame, wing
 - 5 health
 
 ### Cave
-**reverse breakout**   asteroid?  
+**reverse breakout**   asteroid?
 space invaders against all the other players / reverse dig dug? some way to move around screen to build out then collapse
 
 - omens? cave, bat, stone, mushroom, river, diamond
@@ -58,12 +58,12 @@ space invaders against all the other players / reverse dig dug? some way to move
 
 - runner
 - mario platformer
-- flappy bird 
+- flappy bird
 - pong
-- rpg 
-- fruit ninja 
-- asteroid 
-- space invaders 
-- breakout 
+- rpg
+- fruit ninja
+- asteroid
+- space invaders
+- breakout
 - snake
 - tic tac toe

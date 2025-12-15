@@ -1,10 +1,4 @@
 export default function sceneCave() {
-  // sounds
-  loadSound("blockbreak", "Explosion5.ogg");
-  loadSound("paddlehit", "Powerup20.ogg");
-  loadSound("powerup", "Powerup2.ogg");
-  loadSound("ArcadeOddities", "Arcade-Oddities.mp3");
-
   scene("caveScene", ({ levelIndex, score, lives }) => {
     const purple = [148, 41, 239];
     const lightpurple = [255, 180, 255];
@@ -71,31 +65,57 @@ export default function sceneCave() {
       //   "x                  x",
       //   "x         @        x",
       // ],
+      // [
+      //   "xxxxxxxxxxxxxxxxxxxx",
+      //   "xxxxxaaaaxxaaaxaxxxx",
+      //   "xxdxddddddxddddddxxx",
+      //   "xccccccccccccccccccx",
+      //   "xbbbbbbbbbbbbbbbbbbx",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "xaaaaaaaaaaaaaaaaaax",
+      //   "x         .        x",
+      //   "x                  x",
+      //   "x         @        x",
+      // ],
       [
+        "xxxxxxxxxxxxxxxxxxxx",
         "xxxxxxxxxxxxxxxxxxxx",
         "xxxxxaaaaxxaaaxaxxxx",
         "xxdxddddddxddddddxxx",
-        "xccccccccccccccccccx",
-        "xbbbbbbbbbbbbbbbbbbx",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "xaaaaaaaaaaaaaaaaaax",
-        "x         .        x",
+        "xxccccccccccccccccxx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xxa a a a a a a a xx",
+        "xx                xx",
+        "xx        .       xx",
         "x                  x",
-        "x         @        x",
+        "x        @         x",
       ],
     ];
 
@@ -105,11 +125,10 @@ export default function sceneCave() {
       tiles: {
         a: () => [
           // block
-          rect(16, 8),
+          rect(32, 16),
           color(0, 0, 0),
           area(),
           "block",
-          "bouncy",
           {
             points: 1,
           },
@@ -118,9 +137,9 @@ export default function sceneCave() {
           // block
           rect(16, 8),
           color(0, 0, 0),
-          area(),
-          "block",
-          "bouncy",
+          // area({ scale: 0.9 }),
+          // "block",
+           "wall",
           {
             points: 2,
           },
@@ -129,9 +148,9 @@ export default function sceneCave() {
           // block
           rect(16, 8),
           color(0, 0, 0),
-          area(),
-          "block",
-          "bouncy",
+          // area({ scale: 0.9 }),
+          // "block",
+           "wall",
           {
             points: 4,
           },
@@ -140,21 +159,17 @@ export default function sceneCave() {
           // block
           rect(16, 8),
           color(0, 0, 0),
-          area(),
-          "block",
-          "bouncy",
+          // area({ scale: 0.9 }),
+          // "block",
+           "wall",
           {
             points: 8,
           },
         ],
         x: () => [
-          // wall
+          // wall - no collision area, handled by edge detection
           rect(16, 8),
           color(126, 35, 203),
-          area(),
-          // tile({ isObstacle: true }),
-          // body({ isStatic: true }),
-          "bouncy",
           "wall",
         ],
         "@": () => [
@@ -162,26 +177,23 @@ export default function sceneCave() {
           rect(32, 8),
           color(lightpurple),
           area(),
-          // body(),
           anchor("center"),
           "paddle",
-          "bouncy",
           {
             speed: 400,
           },
         ],
         ".": () => [
           // ball
-          color(WHITE),
+          // color(WHITE),
+          color(lightpurple),
           rect(4, 4),
           area(),
-          body(),
           anchor("center"),
           "ball",
           {
             hspeed: 100,
             vspeed: 50,
-            // vel: Vec2.fromAngle(rand(-20, 20)),
           },
         ],
       },
@@ -194,39 +206,35 @@ export default function sceneCave() {
     // ball
     let speed = 120;
 
-    // mouse controls
+    // optimized mouse controls - cache mouse position and paddle bounds
+    let lastMouseX = mousePos().x;
     onUpdate(() => {
-      if (
-        mousePos().x > 0 &&
-        mousePos().x < width() &&
-        mousePos().y > 0 &&
-        mousePos().y < height()
-      ) {
-        const pp1x = paddle.worldArea()["pts"][0]["x"]; //paddle.worldArea().p1.x;
-        const pp2x = paddle.worldArea()["pts"][1]["x"]; //paddle.worldArea().p2.x;
-        if (mousePos().x < pp1x) {
-          // left
+      const currentMouseX = mousePos().x;
+      if (currentMouseX > 0 && currentMouseX < width()) {
+        const paddleLeft = paddle.pos.x - 64; // half paddle width
+        const paddleRight = paddle.pos.x + 64;
+
+        if (currentMouseX < paddleLeft) {
           paddle.move(-paddle.speed, 0);
-        } else if (mousePos().x > pp2x) {
-          // right
+        } else if (currentMouseX > paddleRight) {
           paddle.move(paddle.speed, 0);
         }
       }
+      lastMouseX = currentMouseX;
     });
 
-    // ball movement
+    // optimized ball movement - use simple position checks instead of worldArea()
     onUpdate("ball", (ball) => {
-      // bounce off screen edges
-      // console.log(ball.worldArea()['pts'][0]['x']);
-      const p1x = ball.worldArea()["pts"][0]["x"]; // ball.worldArea().p1.x
-      const p2x = ball.worldArea()["pts"][1]["x"]; // ball.worldArea().p2.x
-      const p1y = ball.worldArea()["pts"][0]["y"]; // ball.worldArea().p1.y
-      if (p1x < 16 || p2x > width() - 16) {
+      // bounce off screen edges using simple position checks
+      const edge = 36;
+      if (ball.pos.x <= edge || ball.pos.x >= width() - edge) {
         ball.hspeed = -ball.hspeed;
+        ball.pos.x = Math.max(edge, Math.min(width() - edge, ball.pos.x)); // keep in bounds
       }
 
-      if (p1y < 16) {
+      if (ball.pos.y <= edge) {
         ball.vspeed = -ball.vspeed;
+        ball.pos.y = edge;
       }
 
       // fall off screen
@@ -237,12 +245,12 @@ export default function sceneCave() {
         } else {
           ball.pos.x = width() / 2;
           ball.pos.y = height() - 32;
+          ball.hspeed = Math.abs(ball.hspeed) * (Math.random() > 0.5 ? 1 : -1); // randomize direction
         }
       }
 
       // move
       ball.move(ball.hspeed, ball.vspeed);
-      // ball.move(ball.vel.scale(speed));
     });
 
     // move ball, bounce it when touches vertical edges, respawn when touch horizontal edges
@@ -264,58 +272,60 @@ export default function sceneCave() {
     //   }
     // });
 
-    // collisions
-    onCollide("ball", "bouncy", (ball, bouncy) => {
-      // speed += 10
-      // ball.vel = Vec2.fromAngle(ball.pos.angle(bouncy.pos));
+    // simplified paddle collision only
+    let lastPaddleHit = 0;
+    onCollide("ball", "paddle", (ball, paddle) => {
+      // Paddle collision with angle based on hit position
+      const hitPos = (ball.pos.x - paddle.pos.x) / 32; // -0.5 to 0.5
+      ball.hspeed = hitPos * 150; // add horizontal component based on hit position
+      ball.vspeed = -Math.abs(ball.vspeed); // always bounce up
 
-      ball.vspeed = -ball.vspeed;
-
-      // if (bouncy.is("wall")) {
-        // console.log("hit");
-        // ball.hspeed = -ball.hspeed;
-        // ball.vspeed = -ball.vspeed;
-      //   speed += 10
-      //   ball.vel = Vec2.fromAngle(ball.pos.angle(bouncy.pos))
-      // } else {
-      //   ball.vspeed = -ball.vspeed;
+      // Throttle sound to prevent audio bottleneck
+      // if (time() - lastPaddleHit > 0.1) {
+      //   play("powerup2");
+      //   lastPaddleHit = time();
       // }
-
-      if (bouncy.is("paddle")) {
-        // play sound
-        play("paddlehit");
-      }
     });
 
+    let lastBlockHit = 0;
     onCollide("ball", "block", (ball, block) => {
+      // Simple vertical bounce for blocks
+      ball.vspeed = -ball.vspeed;
+
       block.destroy();
       score += block.points;
-      play("blockbreak");
 
-      // level end
-      if (level.get("block").length === 0) {
-        // next level
-        if (levelIndex < LEVELS.length) {
-          go("caveScene", {
-            levelIndex: levelIndex + 1,
-            score: score,
-            lives: lives,
-          });
-        } else {
-          // win
-          go("win", score, "cave");
+      // Throttle explosion sound
+      if (time() - lastBlockHit > 0.05) {
+        // play("explosion");
+        lastBlockHit = time();
+      }
+
+      // level end check (less frequent)
+      if (Math.random() < 0.1) { // only check 10% of the time
+        if (level.get("block").length === 0) {
+          // next level
+          if (levelIndex < LEVELS.length) {
+            go("caveScene", {
+              levelIndex: levelIndex + 1,
+              score: score,
+              lives: lives,
+            });
+          } else {
+            // win
+            go("win", score, "cave");
+          }
         }
       }
 
-      // powerups
-      if (chance(0.05)) {
+      // powerups (reduced chance for performance)
+      if (chance(0.1)) {
         // extra life
         add([
           sprite("crystal"),
           pos(block.pos),
-          area(),
+          area({ scale: 0.6 }),
           anchor("center"),
-          offscreen({ destroy: true }),
           "powerup",
           {
             speed: 80,
@@ -337,13 +347,13 @@ export default function sceneCave() {
       powerup.effect();
       powerup.destroy();
       crystals++;
-      play("powerup");
+      // play("powerup");
       if ( crystals == 5 ) {
          go("win", "WIN!", "cave");
       }
     });
 
-    // ui
+    // ui draw
     onDraw(() => {
       drawText({
         text: `SCORE: ${score}`,
@@ -373,7 +383,7 @@ export default function sceneCave() {
     });
 
     // play music
-    const music = play("ArcadeOddities");
+    // const music = play("music");
     // music.loop();
   });
 }
