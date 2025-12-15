@@ -1,76 +1,21 @@
+import { createInstructionSystem } from "../utils/instructions.js";
+
 export default function sceneThief() {
   const traps = ["omen", "flamewall", "bomb", "monster"];
 
-  // for (const trap of traps) {
-  //   loadSprite(trap, `${trap}.png`);
-  // }
-
   scene("thiefScene", () => {
-    // loadSound("hit", "/examples/sounds/hit.mp3");
-    // loadSound("wooosh", "/examples/sounds/wooosh.mp3");
+    const SPEED_MIN = 40;
+    const SPEED_MAX = 160;
 
-    const SPEED_MIN = 40; //120;
-    const SPEED_MAX = 160; //640;
+    // Create instruction system
+    const isGameStarted = createInstructionSystem(
+      "Use arrow keys or WASD to move the thief to collect coins and avoid traps!",
+      "Press SPACEBAR or ENTER to start"
+    );
 
-		 // Text bubble
-    const textbox = add([
-      rect(width() - 180, 60, { radius: 10 }),
-      anchor("center"),
-      pos(center().x, height() - 100),
-      outline(2),
-      color(0, 0, 0),
-      area(),
-    ]);
-
-    // Text
-    const instructionText = add([
-      pos(textbox.pos),
-      text("Use arrow keys or WASD to move the thief to collect coins and avoid traps!", {
-        font: "unscii",
-        size: 8,
-        width: width() - 180,
-        align: "center",
-      }),
-      anchor("center"),
-    ]);
-
-		const startText = add([
-      pos(center().x, textbox.pos.y + 60),
-      text("Press SPACEBAR or ENTER to start", {
-        font: "unscii",
-        size: 8,
-        // width: width() - 180,
-        align: "center",
-      }),
-      anchor("center"),
-    ]);
-
-    // Make start text blink slowly
-    startText.onUpdate(() => {
-      startText.opacity = wave(0.3, 1, time() * 2);
-    });
-
-    // Game state
-    let gameStarted = false;
+    // Track game start time for speed scaling
     let gameStartTime = 0;
-
-    // Dismiss instructions function
-    function dismissInstructions() {
-      if (!gameStarted) {
-        gameStarted = true;
-        gameStartTime = time();
-        destroy(textbox);
-        destroy(instructionText);
-				destroy(startText);
-      }
-    }
-
-    // Dismiss on key press
-    onKeyPress("space", dismissInstructions);
-    onKeyPress("enter", dismissInstructions);
-
-    // Dismiss on click
-    textbox.onClick(dismissInstructions);
+    let gameStartTimeSet = false;
 
     // add the player game object
     const player = add([
@@ -145,16 +90,15 @@ export default function sceneThief() {
 
     // game over if player eats a trap (only when game started)
     player.onCollide("trap", () => {
-      if (gameStarted) {
+      if (isGameStarted()) {
         go("lose", score, "thief");
         addKaboom(player.pos, { scale: 0.5 });
-        // play("hit");
       }
     });
 
     // move the obstacle every frame, destroy it if far outside of screen (only when game started)
     onUpdate("obstacle", (obstacle) => {
-      if (gameStarted) {
+      if (isGameStarted()) {
         obstacle.move(-obstacle.speed, 0);
         if (obstacle.pos.x < -120) {
           destroy(obstacle);
@@ -184,7 +128,7 @@ export default function sceneThief() {
 
     // increment score if player eats a coin (only when game started)
     player.onCollide("coin", (coin) => {
-      if (gameStarted) {
+      if (isGameStarted()) {
         score += 1;
         destroy(coin);
         scoreLabel.text = score;
@@ -195,7 +139,13 @@ export default function sceneThief() {
 
     // spawn obstacles every 0.3 seconds (only when game started)
     loop(0.3, () => {
-      if (!gameStarted) return;
+      if (!isGameStarted()) return;
+
+      // Set game start time on first spawn
+      if (!gameStartTimeSet) {
+        gameStartTime = time();
+        gameStartTimeSet = true;
+      }
 
       // Calculate speed multiplier based on time elapsed (gradually increases)
       const elapsedTime = time() - gameStartTime;

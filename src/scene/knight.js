@@ -1,47 +1,17 @@
+import { createInstructionSystem } from "../utils/instructions.js";
+
 export default function sceneKnight(floorHeight, jumpForce, speed) {
   const purple = [148, 41, 239];
 
   scene("knightScene", () => {
     // define gravity
-    // gravity(1200);
     setGravity(1200);
 
-    // Text bubble
-    const textbox = add([
-      rect(width() - 200, 60, { radius: 10 }),
-      anchor("center"),
-      pos(center().x, height() - 100),
-      outline(2),
-      color(0, 0, 0)
-    ]);
-
-    // Text
-    const instructionText = add([
-      pos(textbox.pos),
-      text("Press spacebar to avoid obstacles and escape the cave!", {
-        font: "unscii",
-        size: 8,
-        width: width() - 230,
-        align: "center",
-      }),
-      anchor("center"),
-    ]);
-
-    const startText = add([
-      pos(center().x, textbox.pos.y + 60),
-      text("Press SPACEBAR or ENTER to start", {
-        font: "unscii",
-        size: 8,
-        // width: width() - 180,
-        align: "center",
-      }),
-      anchor("center"),
-    ]);
-
-    // Make start text blink slowly
-    startText.onUpdate(() => {
-      startText.opacity = wave(0.3, 1, time() * 2);
-    });
+    // Create instruction system
+    const isGameStarted = createInstructionSystem(
+      "Press spacebar to jump and avoid obstacles! Escape the cave!",
+      "Press SPACEBAR or ENTER to start"
+    );
 
     // add a game object to screen
     const player = add([
@@ -64,17 +34,29 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     ]);
 
     function jump() {
-      if (player.isGrounded()) {
+      if (isGameStarted() && player.isGrounded()) {
         player.jump(jumpForce);
       }
     }
 
-    // jump when user presses space
-    onTouchStart(jump);
-    onKeyPress("space", jump);
-    onClick(jump);
+    // jump when user presses space (only when game started)
+    onTouchStart(() => {
+      if (isGameStarted()) jump();
+    });
+    onKeyPress("space", () => {
+      if (isGameStarted()) jump();
+    });
+    onClick(() => {
+      if (isGameStarted()) jump();
+    });
 
     function spawnObstacle() {
+      if (!isGameStarted()) {
+        // Check again in a moment if game hasn't started
+        wait(0.1, spawnObstacle);
+        return;
+      }
+
       // add obstacle obj
       add([
         rect(12, rand(8, 24)),
@@ -94,12 +76,14 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     // start spawning obstacles
     spawnObstacle();
 
-    // lose if player collides with any game obj with tag "obstacle"
+    // lose if player collides with any game obj with tag "obstacle" (only when game started)
     player.onCollide("obstacle", () => {
-      // go to "lose" scene and pass the score
-      go("lose", score, "knight");
-      burp();
-      addKaboom(center());
+      if (isGameStarted()) {
+        // go to "lose" scene and pass the score
+        go("lose", score, "knight");
+        burp();
+        addKaboom(center());
+      }
     });
 
     // keep track of score
@@ -113,10 +97,12 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
       pos(12, 12),
     ]);
 
-    // increment score every frame
+    // increment score every frame (only when game started)
     onUpdate(() => {
-      score++;
-      scoreLabel.text = score;
+      if (isGameStarted()) {
+        score++;
+        scoreLabel.text = score;
+      }
     });
   });
 }
