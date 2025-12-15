@@ -16,18 +16,77 @@ export default function sceneThief() {
     const player = add([
       sprite("thief"),
       pos(40, 20),
-      area({ scale: 0.5 }),
+      area({ scale: 0.85 }),
       anchor("center"),
     ]);
 
-    // make the layer move by mouse
+    // Player movement - smooth keyboard and mouse controls
+    const MOVE_SPEED = 200;
+    const MOUSE_LERP_SPEED = 8; // Higher = faster mouse response
+    let lastMousePos = mousePos();
+    let targetPos = player.pos.clone();
+    let usingMouse = false;
+
     player.onUpdate(() => {
-      player.pos = mousePos();
+      let keyPressed = false;
+      const currentMousePos = mousePos();
+      const deltaTime = dt();
+
+      // Check for keyboard input first
+      if (isKeyDown("left") || isKeyDown("a")) {
+        player.move(-MOVE_SPEED, 0);
+        keyPressed = true;
+        usingMouse = false;
+      }
+      if (isKeyDown("right") || isKeyDown("d")) {
+        player.move(MOVE_SPEED, 0);
+        keyPressed = true;
+        usingMouse = false;
+      }
+      if (isKeyDown("up") || isKeyDown("w")) {
+        player.move(0, -MOVE_SPEED);
+        keyPressed = true;
+        usingMouse = false;
+      }
+      if (isKeyDown("down") || isKeyDown("s")) {
+        player.move(0, MOVE_SPEED);
+        keyPressed = true;
+        usingMouse = false;
+      }
+
+      // Mouse movement detection
+      const mouseMoved = lastMousePos.dist(currentMousePos) > 3;
+      const mouseInBounds = currentMousePos.x >= 0 && currentMousePos.x <= width() &&
+                           currentMousePos.y >= 0 && currentMousePos.y <= height();
+
+      // Switch to mouse mode if mouse moved and no keys pressed
+      if (!keyPressed && mouseMoved && mouseInBounds) {
+        usingMouse = true;
+        targetPos = currentMousePos.clone();
+      }
+
+      // Smooth mouse movement using lerp
+      if (usingMouse && !keyPressed) {
+        const distance = player.pos.dist(targetPos);
+        if (distance > 2) {
+          player.pos = player.pos.lerp(targetPos, MOUSE_LERP_SPEED * deltaTime);
+        }
+      }
+
+      // Update last mouse position
+      if (mouseMoved) {
+        lastMousePos = currentMousePos.clone();
+      }
+
+      // Keep player within screen bounds
+      player.pos.x = Math.max(0, Math.min(width(), player.pos.x));
+      player.pos.y = Math.max(0, Math.min(height(), player.pos.y));
     });
 
     // game over if player eats a trap
     player.onCollide("trap", () => {
       go("lose", score, "thief");
+      addKaboom(player.pos, { scale: 0.5 });
       // play("hit");
     });
 
@@ -61,12 +120,11 @@ export default function sceneThief() {
 
     // increment score if player eats a coin
     player.onCollide("coin", (coin) => {
-      addKaboom(player.pos);
       score += 1;
       destroy(coin);
       scoreLabel.text = score;
       burp();
-      shake(12);
+      shake(6);
     });
 
     // do this every 0.3 seconds
