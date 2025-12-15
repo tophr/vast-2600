@@ -84,7 +84,7 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
       // go to "lose" scene and pass the score
       go("lose", score, "knight");
       burp();
-      addKaboom();
+      addKaboom(center());
     });
 
     // keep track of score
