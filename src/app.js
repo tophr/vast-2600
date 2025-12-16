@@ -44,6 +44,20 @@ loadSprite("knight", `${ASSET_BASE_URL}knight.png`);
 loadSprite("thief", `${ASSET_BASE_URL}thief.png`);
 loadSprite("goblin", `${ASSET_BASE_URL}goblin.png`);
 loadSprite("dragon", `${ASSET_BASE_URL}dragon.png`);
+
+loadSprite("dragonflight", `${ASSET_BASE_URL}dragon-flight.png`, {
+  sliceX: 4,
+  sliceY: 3,
+  anims: {
+    fly: {
+      // frames: [0, 1, 2, 3, 2, 1, 0, 4, 5, 6, 7, 8, 7, 6, 5, 4],
+      frames: [0, 2, 0, 4, 6, 4],
+      speed: 10,
+      loop: true,
+    },
+  },
+});
+
 loadSprite("cave", `${ASSET_BASE_URL}cave.png`);
 
 loadSprite("coin", `${ASSET_BASE_URL}coin.png`);

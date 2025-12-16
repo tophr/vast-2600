@@ -13,7 +13,7 @@ export default function sceneDragon() {
       "Press SPACEBAR or ENTER to start"
     );
 
-    const CAVE_OPEN = 65; //95
+    const CAVE_OPEN = 100; //65; //95
     const CAVE_MIN = 50;
     const JUMP_FORCE = 300;
     const SPEED = 280;
@@ -29,13 +29,15 @@ export default function sceneDragon() {
 
       // Create dragon with physics
       dragon = add([
-        sprite("dragon"),
+        // sprite("dragon"),
+        sprite("dragonflight", { anim: "fly" }),
         pos(width() / 4, 0),
-        area(),
+        area(scale(0.75, 0.5)),
+        anchor("center"),
         body(),
       ]);
 
-      dragon.flipX = true;
+      // dragon.flipX = true;
 
       // Create score display
       scoreLabel = add([
@@ -62,9 +64,11 @@ export default function sceneDragon() {
 
       // Dragon collision with caves
       dragon.onCollide("cave", () => {
-        go("lose", score, "dragon");
-        // play("hit");
         addKaboom(dragon.pos);
+        wait(0.3, () => {
+          go("lose", score, "dragon");
+          // play("hit");
+        });
       });
 
       // Cave scoring logic
@@ -115,7 +119,7 @@ export default function sceneDragon() {
         rect(32, h1),
         color(148, 41, 239),
         outline(2),
-        area(),
+        area(scale(0.8)),
         move(LEFT, SPEED),
         offscreen({ destroy: true }),
         "cave",
@@ -127,6 +131,8 @@ export default function sceneDragon() {
         color(148, 41, 239),
         outline(2),
         area(),
+        // area(scale(0.8)),
+        // anchor("botleft"),
         move(LEFT, SPEED),
         offscreen({ destroy: true }),
         "cave",
