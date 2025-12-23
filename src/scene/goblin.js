@@ -63,10 +63,10 @@ export default function sceneGoblin() {
           anchor("center"),
         ],
         $: () => [
-          sprite("key"), 
-          area(), 
-          // scale(0.5), 
-          anchor("center"), 
+          sprite("key"),
+          area(),
+          // scale(0.5),
+          anchor("center"),
           "key"
         ],
         "@": () => [
@@ -101,7 +101,7 @@ export default function sceneGoblin() {
             sprite(char.sprite),
             area(),
             // body({ isStatic: true }),
-            anchor("center"),            
+            anchor("center"),
             // state("move", [ "idle", "attack", "move" ]),
             state("idle", [ "idle", "attack" ]),
             "character",
@@ -184,7 +184,7 @@ export default function sceneGoblin() {
         dialog.say("you got no key!");
       }
     });
-    
+
     player.onCollide("opendoor", () => {
       // if (levelIndex + 1 < LEVELS.length) {
         go("goblinScene", {
@@ -192,14 +192,14 @@ export default function sceneGoblin() {
             score: score,
             lives: lives,
           });
-      // } 
+      // }
     });
 
     // talk on touch
     player.onCollide("character", (ch) => {
       dialog.say(ch.msg);
     });
-    
+
     // Run the callback once every time we enter "idle" state.
     // Here we stay "idle" for 0.5 second, then enter "attack" state.
     const enemy =  level.get("character")[0]; //characters["a"];
@@ -230,7 +230,7 @@ export default function sceneGoblin() {
       }
 
       await wait(1)
-      enemy.enterState("idle") // move 
+      enemy.enterState("idle") // move
 
     })
 
@@ -261,11 +261,43 @@ export default function sceneGoblin() {
       right: RIGHT,
       up: UP,
       down: DOWN,
+      a: LEFT,
+      d: RIGHT,
+      w: UP,
+      s: DOWN,
     };
 
+    // Mouse navigation - move towards clicked position
+    let targetPos = null;
+
+    onMousePress(() => {
+      dialog.dismiss();
+      targetPos = mousePos();
+    });
+
+    // Move towards target position if one is set
+    onUpdate(() => {
+      if (targetPos && player.exists()) {
+        const direction = targetPos.sub(player.pos);
+        const distance = direction.len();
+
+        // If we're close enough to the target, stop moving
+        if (distance < 5) {
+          targetPos = null;
+        } else {
+          // Move towards the target
+          const moveVector = direction.unit().scale(SPEED);
+          player.move(moveVector);
+        }
+      }
+    });
+
+    // Keyboard controls (existing)
     for (const dir in dirs) {
       onKeyPress(dir, () => {
         dialog.dismiss();
+        // Clear mouse target when using keyboard
+        targetPos = null;
       });
       onKeyDown(dir, () => {
         player.move(dirs[dir].scale(SPEED));
