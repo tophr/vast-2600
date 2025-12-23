@@ -18,7 +18,9 @@ body {
 
 canvas {
   display: block;
-/*   aspect-ratio: 4 / 3; */
+  /*   aspect-ratio: 4 / 3; */
   margin: 0 auto;
-/*   background: #333; */
+  /*   background: #333; */
+  max-width: 100%;
+  height: auto !important;
 }
