@@ -80,6 +80,16 @@ export default function sceneStart() {
       "copyright"
     ]);
 
+    const pressStart = add([
+      text("PRESS START", {
+        font: "unscii",
+        size: 10,
+      }),
+      pos(width() / 2, height() - 32),
+      anchor("center"),
+      opacity(0),
+    ]);
+
     // Character select modal system
     let characterSelectOpen = false;
     let selectedCharacterIndex = 0;
@@ -140,13 +150,13 @@ export default function sceneStart() {
       // Create character sprites in select screen
       const charSpacing = 45;
       const startX = width() / 2 - (characterOptions.length - 1) * charSpacing / 2;
-      const charY = height() / 2 + 10;
+      const charY = height() / 2 + 20;
 
       selectCharacters = characterOptions.map((char, index) => {
         const charSprite = add([
           sprite(char.sprite),
           pos(startX + index * charSpacing, charY),
-          anchor("center"),
+          anchor("bot"),
           scale(0.8),
           area(),
           z(1002),
@@ -227,7 +237,7 @@ export default function sceneStart() {
       if (selectCharacters[selectedCharacterIndex] && selectionArrow) {
         selectionArrow.pos = vec2(
           selectCharacters[selectedCharacterIndex].sprite.pos.x,
-          selectCharacters[selectedCharacterIndex].sprite.pos.y + 25
+          selectCharacters[selectedCharacterIndex].sprite.pos.y + 8
         );
       }
     }
@@ -275,10 +285,11 @@ export default function sceneStart() {
     // loading animation
     const chars = get("char");
     const copyrightBar = get("copyright");
+    const startElements = [pressStart];
 
     let timings;
     let duration = 2;
-    let skipped = false;
+    let animationComplete = false;
 
     if (initial === true) {
       timings = [0.5, 2.5, 4.5];
@@ -287,66 +298,99 @@ export default function sceneStart() {
       duration = 0.25;
     }
 
-    // Skip animation on escape key
+    // Unified escape handler
     onKeyPress("escape", () => {
-      if (!skipped) {
-        skipped = true;
-        // Immediately show all elements
-        title.opacity = 1;
-        chars.forEach(char => char.opacity = 1);
-        copyrightBar.forEach(bar => bar.opacity = 1);
+      if (characterSelectOpen) {
+        closeCharacterSelect();
+      } else if (!animationComplete) {
+        skipToEnd();
+      } else {
+        openCharacterSelect();
       }
     });
+
+    // Skip animation function
+    function skipToEnd() {
+      animationComplete = true;
+
+      // Cancel any running tweens
+      title.opacity = 1;
+      chars.forEach(char => char.opacity = 1);
+      copyrightBar.forEach(bar => bar.opacity = 1);
+      startElements.forEach(elem => elem.opacity = 1);
+
+      // Start the press start blinking
+      pressStart.onUpdate(() => {
+        pressStart.opacity = wave(0.3, 1, time() * 2);
+      });
+
+      setupControls();
+    }
+
+    // Setup all controls once
+    function setupControls() {
+      // Click anywhere to open character select
+      onClick(() => {
+        if (!characterSelectOpen) {
+          openCharacterSelect();
+        }
+      });
+
+      // Keyboard controls
+      onKeyPress("enter", () => {
+        if (characterSelectOpen) {
+          selectCharacter();
+        } else {
+          openCharacterSelect();
+        }
+      });
+
+      onKeyPress("space", () => {
+        if (characterSelectOpen) {
+          selectCharacter();
+        } else {
+          openCharacterSelect();
+        }
+      });
+
+      // Navigation controls
+      onKeyPress("left", navigateLeft);
+      onKeyPress("right", navigateRight);
+      onKeyPress("a", navigateLeft);
+      onKeyPress("d", navigateRight);
+    }
 
     console.log({initial});
 
     wait(timings[0], () => {
+      if (animationComplete) return;
+      console.log("Showing title");
       tween(title.opacity, 1, duration, (p) => (title.opacity = p), easings.easeOut);
     });
 
     wait(timings[1], () => {
+      if (animationComplete) return;
+      console.log("Showing characters");
       chars.map((char) => tween(char.opacity, 1, duration, (p) => (char.opacity = p), easings.easeOut));
     });
 
     wait(timings[2], () => {
+      if (animationComplete) return;
+      console.log("Showing start elements");
       copyrightBar.map((bar) => tween(bar.opacity, 1, duration, (p) => (bar.opacity = p), easings.easeOut));
+      startElements.map((elem) => tween(elem.opacity, 1, duration, (p) => (elem.opacity = p), easings.easeOut));
+
+      // Make press start text blink slowly
+      pressStart.onUpdate(() => {
+        pressStart.opacity = wave(0.3, 1, time() * 2);
+      });
 
       // Set up character select after loading animation completes
       wait(duration, () => {
-        // Click anywhere to open character select
-        onClick(() => {
-          openCharacterSelect();
-        });
-
-        // Keyboard controls for opening character select and navigation
-        onKeyPress("enter", () => {
-          if (characterSelectOpen) {
-            selectCharacter();
-          } else {
-            openCharacterSelect();
-          }
-        });
-
-        onKeyPress("space", () => {
-          if (characterSelectOpen) {
-            selectCharacter();
-          } else {
-            openCharacterSelect();
-          }
-        });
-
-        // Navigation controls
-        onKeyPress("left", navigateLeft);
-        onKeyPress("right", navigateRight);
-        onKeyPress("a", navigateLeft);
-        onKeyPress("d", navigateRight);
-
-        // Close character select with escape
-        onKeyPress("escape", () => {
-          if (characterSelectOpen) {
-            closeCharacterSelect();
-          }
-        });
+        if (animationComplete) return;
+        animationComplete = true;
+        console.log("Character select ready");
+        setupControls();
       });
     });
   });
