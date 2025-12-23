@@ -1,21 +1,35 @@
 # TODO
 
 - ~~Loading screen~~
-- Character select
+- ~~Character select~~
 - ~~CRT effect (requires v3)~~
+  - Options menu to enable
 - ~~Different game type for each~~
-- Keyboard guide + game goal (on character select probably)
+- ~~Enable mouse + keyboard controls~~
+- Keyboard guide + game goal
+  - on character select?
+  - on game start?
+- Sound effects + music
+- Polish individual games
+- ~~Win / lose screens~~
+  - Restart
+- High score tracking
+- Pause functionality
 - Unify life / score? Or leave asymmetric cuz you know
 
-## Goals:
+## Tabletop Game Goals:
 
-**Knight**: Kill Dragon -or- reveal 5 crystal tokens + escape cave via entrance tile
-**Goblins**: Kill Knight -or- kill Dragon -or- smash 5 crystal tokens
-**Dragon**: Wake up (remove 11 sloth cubes) & then surface and esacpe via entrance tile
+**Knight**: Kill Dragon -or- reveal 5 crystal tokens + escape cave via entrance tile.
+
+**Goblins**: Kill Knight -or- kill Dragon -or- smash 5 crystal tokens.
+
+**Dragon**: Wake up (remove 11 sloth cubes) & then surface and escape via entrance tile.
+
 **Cave**: Collapse the Cave. To do so, you must first place all of the Cave tiles, then destroy Cave tiles until 5 Crystal tiles have collapsed.
-**Thief**: Aquire + stash 6 treasures or dragon gem tokens (to break curse)
 
-## Game Ideation:
+**Thief**: Aquire + stash 6 treasures or dragon gem tokens (to break curse).
+
+## 2600 Game Ideation:
 
 ### Knight
 
@@ -24,25 +38,23 @@
 - 7 health
 
 ### Goblins
-
-snake - more goblins / shooter against dragon + knight, puzzle game positioning the 3? asteroids to smash crystals
-platformer? **rpg** - find and kill dragon or knight and smash 5 crystal tokens
-
+- snake - more goblins / shooter against dragon + knight, puzzle game positioning the 3? asteroids to smash crystals
+- platformer?
+- **rpg**
+  - find and kill dragon or knight and smash 5 crystal tokens.
+  - need to build out map and logic for this
 - fangs, bones, eye tribes
 - rage meter 0-3
 
 ### Dragon
-
-asteroid - fire shooting!
-**flappy bird** - get powerups that let you shoot through obstacles (cave walls)
-
+- asteroid - fire shooting!
+- **flappy bird** - get powerups that let you shoot through obstacles (cave walls)
 - claw, flame, wing
 - 5 health
 
 ### Cave
-**reverse breakout**   asteroid?
-space invaders against all the other players / reverse dig dug? some way to move around screen to build out then collapse
-
+- **reverse breakout**   asteroid?
+- space invaders against all the other players / reverse dig dug? some way to move around screen to build out then collapse
 - omens? cave, bat, stone, mushroom, river, diamond
 
 ### Thief

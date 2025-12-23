@@ -9,7 +9,7 @@ export default function sceneDragon() {
 
     // Create instruction system
     const isGameStarted = createInstructionSystem(
-      "Press SPACEBAR to fly and navigate through the cave!",
+      "Press SPACEBAR to fly and escape the cave!",
       "Press SPACEBAR or ENTER to start"
     );
 
