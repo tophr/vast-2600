@@ -9,7 +9,7 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
 
     // Create instruction system
     const isGameStarted = createInstructionSystem(
-      "Press SPACEBAR to jump and avoid obstacles! Escape the cave!",
+      "Press SPACEBAR to jump and avoid obstacles to escape the cave!",
       "Press SPACEBAR or ENTER to start"
     );
 

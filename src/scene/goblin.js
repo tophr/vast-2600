@@ -1,9 +1,17 @@
+import { createInstructionSystem } from "../utils/instructions.js";
+
 export default function sceneGoblin() {
   scene("goblinScene", ({levelIndex, score, lives}) => {
     const SPEED = 160;
     const ENEMY_SPEED = 160;
     const BULLET_SPEED = 400; //800;
     const purple = [148, 41, 239];
+
+    // Create instruction system
+    const isGameStarted = createInstructionSystem(
+      "Smash 5 crystals and avoid getting slain by the knight or dragon!",
+      "Press SPACEBAR or ENTER to start"
+    );
 
     // character dialog data
     const characters = {
@@ -159,149 +167,157 @@ export default function sceneGoblin() {
     }
 
     let hasKey = false;
+    let gameInitialized = false;
     const dialog = addDialog();
 
-    player.onCollide("key", (key) => {
-      destroy(key);
-      hasKey = true;
-    });
+    // Game initialization function - called when instructions are dismissed
+    function initializeGame() {
+      player.onCollide("key", (key) => {
+        destroy(key);
+        hasKey = true;
+      });
 
-    player.onCollide("door", () => {
-      if (hasKey) {
-        console.log(levelIndex + 1);
-        console.log("sploot");
-        console.log(LEVELS.length);
-        if (levelIndex + 1 < LEVELS.length) {
+      player.onCollide("door", () => {
+        if (hasKey) {
+          if (levelIndex + 1 < LEVELS.length) {
+            go("goblinScene", {
+              levelIndex: levelIndex + 1,
+              score: score,
+              lives: lives,
+            });
+          } else {
+            go("win", "YOU WIN", "goblin");
+          }
+        } else {
+          dialog.say("you got no key!");
+        }
+      });
+
+      player.onCollide("opendoor", () => {
+        // if (levelIndex + 1 < LEVELS.length) {
           go("goblinScene", {
-            levelIndex: levelIndex + 1,
-            score: score,
-            lives: lives,
-          });
-        } else {
-          go("win", "YOU WIN", "goblin");
-        }
-      } else {
-        dialog.say("you got no key!");
+              levelIndex: levelIndex - 1,
+              score: score,
+              lives: lives,
+            });
+        // }
+      });
+
+      // talk on touch
+      player.onCollide("character", (ch) => {
+        dialog.say(ch.msg);
+      });
+
+      // Run the callback once every time we enter "idle" state.
+      // Here we stay "idle" for 0.5 second, then enter "attack" state.
+      const enemy = level.get("character")[0];
+
+      if (enemy) {
+        enemy.onStateEnter("idle", async () => {
+          await wait(0.5);
+          enemy.enterState("attack");
+        });
+
+        // When we enter "attack" state, we fire a bullet, and enter "move" state after 1 sec
+        enemy.onStateEnter("attack", async () => {
+          // Don't do anything if player doesn't exist anymore
+          if (player.exists()) {
+            const dir = player.pos.sub(enemy.pos).unit();
+
+            add([
+              pos(enemy.pos),
+              move(dir, BULLET_SPEED),
+              rect(6, 6),
+              area(),
+              offscreen({ destroy: true }),
+              anchor("center"),
+              color(234, 80, 36),
+              "bullet",
+            ]);
+          }
+          await wait(1);
+          enemy.enterState("idle");
+        });
+
+        enemy.onStateEnter("move", async () => {
+          await wait(2);
+          enemy.enterState("idle");
+        });
+
+        // Start the state machine by manually entering idle state
+        // Like .onUpdate() which runs every frame, but only runs when the current state is "move"
+        // Here we move towards the player every frame if the current state is "move"
+        enemy.onStateUpdate("move", () => {
+          if (!player.exists()) return;
+          const dir = player.pos.sub(enemy.pos).unit();
+          enemy.move(dir.scale(ENEMY_SPEED));
+        });
       }
-    });
 
-    player.onCollide("opendoor", () => {
-      // if (levelIndex + 1 < LEVELS.length) {
-        go("goblinScene", {
-            levelIndex: levelIndex - 1,
-            score: score,
-            lives: lives,
-          });
-      // }
-    });
+      // Taking a bullet makes us disappear
+      player.onCollide("bullet", (bullet) => {
+        destroy(bullet)
+        destroy(player)
+        addKaboom(bullet.pos)
+         // go("lose", score);
+         go("lose", "YOU LOSE", "goblin");
+      });
 
-    // talk on touch
-    player.onCollide("character", (ch) => {
-      dialog.say(ch.msg);
-    });
+      const dirs = {
+        left: LEFT,
+        right: RIGHT,
+        up: UP,
+        down: DOWN,
+        a: LEFT,
+        d: RIGHT,
+        w: UP,
+        s: DOWN,
+      };
 
-    // Run the callback once every time we enter "idle" state.
-    // Here we stay "idle" for 0.5 second, then enter "attack" state.
-    const enemy =  level.get("character")[0]; //characters["a"];
-    enemy.onStateEnter("idle", async () => {
-      await wait(0.5)
-      enemy.enterState("attack")
-    })
+      // Mouse navigation - move towards clicked position
+      let targetPos = null;
 
-    // When we enter "attack" state, we fire a bullet, and enter "move" state after 1 sec
-    enemy.onStateEnter("attack", async () => {
-
-      // Don't do anything if player doesn't exist anymore
-      if (player.exists()) {
-
-        const dir = player.pos.sub(enemy.pos).unit()
-
-        add([
-          pos(enemy.pos),
-          move(dir, BULLET_SPEED),
-          rect(6, 6),
-          area(),
-          offscreen({ destroy: true }),
-          anchor("center"),
-          color(234, 80, 36),
-          "bullet",
-        ])
-
-      }
-
-      await wait(1)
-      enemy.enterState("idle") // move
-
-    })
-
-    enemy.onStateEnter("move", async () => {
-      await wait(2)
-      enemy.enterState("idle")
-    })
-
-    // Like .onUpdate() which runs every frame, but only runs when the current state is "move"
-    // Here we move towards the player every frame if the current state is "move"
-    enemy.onStateUpdate("move", () => {
-      if (!player.exists()) return
-      const dir = player.pos.sub(enemy.pos).unit()
-      enemy.move(dir.scale(ENEMY_SPEED))
-    })
-
-    // Taking a bullet makes us disappear
-    player.onCollide("bullet", (bullet) => {
-      destroy(bullet)
-      destroy(player)
-      addKaboom(bullet.pos)
-       // go("lose", score);
-       go("lose", "YOU LOSE", "goblin");
-    });
-
-    const dirs = {
-      left: LEFT,
-      right: RIGHT,
-      up: UP,
-      down: DOWN,
-      a: LEFT,
-      d: RIGHT,
-      w: UP,
-      s: DOWN,
-    };
-
-    // Mouse navigation - move towards clicked position
-    let targetPos = null;
-
-    onMousePress(() => {
-      dialog.dismiss();
-      targetPos = mousePos();
-    });
-
-    // Move towards target position if one is set
-    onUpdate(() => {
-      if (targetPos && player.exists()) {
-        const direction = targetPos.sub(player.pos);
-        const distance = direction.len();
-
-        // If we're close enough to the target, stop moving
-        if (distance < 5) {
-          targetPos = null;
-        } else {
-          // Move towards the target
-          const moveVector = direction.unit().scale(SPEED);
-          player.move(moveVector);
-        }
-      }
-    });
-
-    // Keyboard controls (existing)
-    for (const dir in dirs) {
-      onKeyPress(dir, () => {
+      onMousePress(() => {
         dialog.dismiss();
-        // Clear mouse target when using keyboard
-        targetPos = null;
+        targetPos = mousePos();
       });
-      onKeyDown(dir, () => {
-        player.move(dirs[dir].scale(SPEED));
+
+      // Move towards target position if one is set
+      onUpdate(() => {
+        if (targetPos && player.exists()) {
+          const direction = targetPos.sub(player.pos);
+          const distance = direction.len();
+
+          // If we're close enough to the target, stop moving
+          if (distance < 5) {
+            targetPos = null;
+          } else {
+            // Move towards the target
+            const moveVector = direction.unit().scale(SPEED);
+            player.move(moveVector);
+          }
+        }
       });
+
+      // Keyboard controls (existing)
+      for (const dir in dirs) {
+        onKeyPress(dir, () => {
+          dialog.dismiss();
+          // Clear mouse target when using keyboard
+          targetPos = null;
+        });
+        onKeyDown(dir, () => {
+          player.move(dirs[dir].scale(SPEED));
+        });
+      }
     }
+
+    // Wait for instructions to be dismissed before initializing game
+    onUpdate(() => {
+      if (!gameInitialized && isGameStarted()) {
+        gameInitialized = true;
+        initializeGame();
+      }
+    });
   });
 }
