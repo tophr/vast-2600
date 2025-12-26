@@ -245,6 +245,8 @@ export default function sceneGoblin() {
         });
 
         // Start the state machine by manually entering idle state
+        enemy.enterState("idle");
+
         // Like .onUpdate() which runs every frame, but only runs when the current state is "move"
         // Here we move towards the player every frame if the current state is "move"
         enemy.onStateUpdate("move", () => {
