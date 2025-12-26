@@ -7,11 +7,13 @@ export default function sceneGoblin() {
     const BULLET_SPEED = 400; //800;
     const purple = [148, 41, 239];
 
-    // Create instruction system
-    const isGameStarted = createInstructionSystem(
-      "Smash 5 crystals and avoid getting slain by the knight or dragon!",
-      "Press SPACEBAR or ENTER to start"
-    );
+    // Create instruction system only for first level
+    const isGameStarted = levelIndex === 0
+      ? createInstructionSystem(
+          "Smash 5 crystals and avoid getting slain by the knight or dragon!",
+          "Press SPACEBAR or ENTER to start"
+        )
+      : () => true; // For subsequent levels, game starts immediately
 
     // character dialog data
     const characters = {
