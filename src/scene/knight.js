@@ -25,7 +25,7 @@ export default function sceneKnight(floorHeight, jumpForce, speed) {
     // floor
     add([
       rect(width(), floorHeight),
-      outline(4),
+      // outline(4),
       pos(0, height()),
       anchor("botleft"),
       area(),

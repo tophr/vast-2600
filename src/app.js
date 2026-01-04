@@ -87,7 +87,7 @@ loadSound("powerup2", `${ASSET_BASE_URL}Powerup20.ogg`);
 sceneStart();
 sceneKnight(FLOOR_HEIGHT, JUMP_FORCE, SPEED);
 sceneGoblin();
-sceneDragon();
+sceneDragon(FLOOR_HEIGHT);
 sceneCave();
 sceneThief();
 sceneLose();

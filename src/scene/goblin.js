@@ -45,6 +45,14 @@ export default function sceneGoblin() {
         "-   @    -",
         "----------",
       ],
+      [
+        "------|---",
+        "-        -",
+        "-       @-",
+        "-        -",
+        "- $      -",
+        "----------",
+      ],
     ];
 
     const level = addLevel(LEVELS[levelIndex], {

@@ -1,20 +1,17 @@
 import { createInstructionSystem } from "../utils/instructions.js";
 
-export default function sceneDragon() {
+export default function sceneDragon(floorHeight) {
+  const purple = [148, 41, 239];
 
   scene("dragonScene", () => {
-
     // define gravity
     setGravity(1600);
 
     // Create instruction system
-    const isGameStarted = createInstructionSystem(
-      "Press SPACEBAR to fly and escape the cave!",
-      "Press SPACEBAR or ENTER to start"
-    );
+    const isGameStarted = createInstructionSystem("Press SPACEBAR to fly and escape the cave!", "Press SPACEBAR or ENTER to start");
 
     const CAVE_OPEN = 100; //65; //95
-    const CAVE_MIN = 50;
+    const CAVE_MIN = 80; //50;
     const JUMP_FORCE = 300;
     const SPEED = 280;
     const CEILING = -30;
@@ -80,12 +77,20 @@ export default function sceneDragon() {
       });
 
       // Spawn caves every .75 sec
-      loop(.75, () => {
+      loop(0.75, () => {
         spawnCave();
       });
     }
 
     // Jump controls - these check if game started and initialize if needed
+    onKeyPress("enter", () => {
+      if (isGameStarted()) {
+        if (!dragon) initializeGame();
+        dragon.jump(JUMP_FORCE);
+        // play("wooosh");
+      }
+    });
+
     onKeyPress("space", () => {
       if (isGameStarted()) {
         if (!dragon) initializeGame();
@@ -113,23 +118,26 @@ export default function sceneDragon() {
     function spawnCave() {
       const h1 = rand(CAVE_MIN, height() - CAVE_MIN - CAVE_OPEN);
       const h2 = height() - h1 - CAVE_OPEN;
+      const caveWidth = rand(32, 120); // cave width, was 32
 
+      // Top cave
       add([
         pos(width(), 0),
-        rect(32, h1),
+        rect(caveWidth, h1),
         color(148, 41, 239),
-        outline(2),
+        // outline(2),
         area(scale(0.8)),
         move(LEFT, SPEED),
         offscreen({ destroy: true }),
         "cave",
       ]);
 
+      // Bottom cave
       add([
         pos(width(), h1 + CAVE_OPEN),
-        rect(32, h2),
+        rect(caveWidth, h2),
         color(148, 41, 239),
-        outline(2),
+        // outline(2),
         area(),
         // area(scale(0.8)),
         // anchor("botleft"),
@@ -137,6 +145,28 @@ export default function sceneDragon() {
         offscreen({ destroy: true }),
         "cave",
         { passed: false },
+      ]);
+
+      // ceiling
+      add([
+        rect(width(), floorHeight),
+        // outline(4),
+        pos(0, 0),
+        anchor("topleft"),
+        area(),
+        // body({ isStatic: true }),
+        color(purple),
+      ]);
+
+      // floor
+      add([
+        rect(width(), floorHeight),
+        // outline(4),
+        pos(0, height()),
+        anchor("botleft"),
+        area(),
+        body({ isStatic: true }),
+        color(purple),
       ]);
     }
 
